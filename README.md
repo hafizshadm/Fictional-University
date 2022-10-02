@@ -1,5 +1,6 @@
 # Fictional-University-Custom-Wordpress-Theme
-This is Wordpress Files Backup having custom build wordpress theme with following functionalities:
+############################################
+This is Wordpress Files Backup having custom build wordpress theme with these functionalities:
 ~ Listing Programs
 ~ Listing Professors
 ~ Listing Campuses
@@ -7,4 +8,5 @@ This is Wordpress Files Backup having custom build wordpress theme with followin
 ~ User Login
 ~ Private Notes
 ~ All Features Relations and much more
+############################################
 Contact Me on https://www.fiverr.com/aynadigital
