@@ -1,0 +1,16 @@
+<!-- Learned In Section 3 Starts -->
+
+<h1><?php //echo bloginfo('name'); ?></h1>
+<p><?php //echo bloginfo('description'); ?></p>
+
+<?php
+// $cyberxTeamNames = array("Shad", "Usman P", "Usman L", "Umair");
+// $count = 0;
+// while($count < count($cyberxTeamNames)) {
+//     echo "<li> $cyberxTeamNames[$count] </li>";
+//     $count++;
+// }
+?>
+<!-- Learned In Section 3 Ends -->
+
+
