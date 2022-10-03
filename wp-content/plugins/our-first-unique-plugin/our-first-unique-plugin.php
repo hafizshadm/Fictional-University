@@ -7,20 +7,33 @@
     Author URI: https://fiverr.com/aynadigital
 */
 
-add_action('admin_menu', 'ourPluginSettingLink');
+class WordCountAndTimePlugin {
+    function __construct()
+    {
+        add_action('admin_menu', array($this, 'adminPage'));
+    }
 
-function ourPluginSettingLink() {
-    add_options_page(
-        'Word Count Setting', //Title of the page
-        'Word Count', //Menu Title
-        'manage_options', //User Role
-        'word-count-setting', //Slug
-        'ourSettingsPageHTML' //Call back function
-    );
+    function adminPage() {
+        add_options_page(
+            'Word Count Setting', //Title of the page
+            'Word Count', //Menu Title
+            'manage_options', //User Role
+            'word-count-setting', //Slug
+            array($this, 'ourHTML') //Call back function
+        );
+    }
+    
+    function ourHTML() {
+        ?>
+
+        <div class="wrap">
+            <h1>Word Count Settings</h1>
+        </div>
+
+        <?php
+    }
 }
 
-function ourSettingsPageHTML() {
-    ?>
-    <p>Hello World From Word Count Plugin</p>
-    <?php
-}
+$wordCountAndTimePlugin = new WordCountAndTimePlugin();
+
+
