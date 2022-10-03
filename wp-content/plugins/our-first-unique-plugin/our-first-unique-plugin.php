@@ -7,12 +7,20 @@
     Author URI: https://fiverr.com/aynadigital
 */
 
-add_filter('the_content', 'addToEndOfPost');
+add_action('admin_menu', 'ourPluginSettingLink');
 
-function addToEndOfPost($content) {
-    if(is_single() && is_main_query()) {
-        return $content . '<h4>My name is shad.</h4>';
-    }
+function ourPluginSettingLink() {
+    add_options_page(
+        'Word Count Setting', //Title of the page
+        'Word Count', //Menu Title
+        'manage_options', //User Role
+        'word-count-setting', //Slug
+        'ourSettingsPageHTML' //Call back function
+    );
+}
 
-    return $content;
+function ourSettingsPageHTML() {
+    ?>
+    <p>Hello World From Word Count Plugin</p>
+    <?php
 }
