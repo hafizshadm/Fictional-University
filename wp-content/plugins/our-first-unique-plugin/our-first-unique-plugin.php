@@ -12,7 +12,34 @@ class WordCountAndTimePlugin {
     {
         add_action('admin_menu', array($this, 'adminPage'));
         add_action('admin_init', array($this, 'settings'));
+        add_filter('the_content', array($this, 'ifWrap'));
     }
+
+    function ifWrap($content) {
+        if(
+            (is_main_query() AND is_single())
+            AND
+            (
+                get_option('wcp_word_count', '1') OR
+                get_option('wcp_char_count', '1') OR
+                get_option('wcp_read_time', '1')
+            )
+        ) {
+            return $this->createHTML($content);
+        }
+        return $content;
+    }
+
+    function createHTML($content) {
+
+        $html = '<h3>'. get_option('wcp_headline', 'Post Statistics') .'</h3><p>';
+        $wordCount = str_word_count(strip_tags($content));
+        if (get_option('wcp_location', '0') == '0') {
+            return $html . $content;
+        }
+        return $content . $html;
+    }
+
 
     function settings() {
         // Creating section with the help of add_settings_field
@@ -39,7 +66,7 @@ class WordCountAndTimePlugin {
         register_setting(
             'wordcountplugin', //group name 
             'wcp_location',  //settings name going to database
-            array('sanitize_callback' => 'sanitize_text_field', 'default' => '0') //options or values going to db
+            array('sanitize_callback' => array($this, 'sanitize_display_location'), 'default' => '0') //options or values going to db
         );
 
 
@@ -70,9 +97,10 @@ class WordCountAndTimePlugin {
         add_settings_field(
             'wcp_word_count', //using settings name
             'Word Count', //title for the field
-            array($this, 'wordCountHTML'), //callback
+            array($this, 'checkboxHTML'), //callback
             'word-count-setting', //using slug of the page
-            'wcp_first_section' //section name have to use in add_settings_section
+            'wcp_first_section', //section name have to use in add_settings_section
+            array('theName' => 'wcp_word_count')
         );
 
         //Storing settings in database
@@ -90,9 +118,10 @@ class WordCountAndTimePlugin {
         add_settings_field(
             'wcp_char_count', //using settings name
             'Character Count', //title for the field
-            array($this, 'charCountHTML'), //callback
+            array($this, 'checkboxHTML'), //callback
             'word-count-setting', //using slug of the page
-            'wcp_first_section' //section name have to use in add_settings_section
+            'wcp_first_section', //section name have to use in add_settings_section
+            array('theName' => 'wcp_char_count')
         );
 
         //Storing settings in database
@@ -110,9 +139,10 @@ class WordCountAndTimePlugin {
         add_settings_field(
             'wcp_read_time', //using settings name
             'Read Time', //title for the field
-            array($this, 'readTimeHTML'), //callback
+            array($this, 'checkboxHTML'), //callback
             'word-count-setting', //using slug of the page
-            'wcp_first_section' //section name have to use in add_settings_section
+            'wcp_first_section', //section name have to use in add_settings_section
+            array('theName' => 'wcp_read_time')
         );
 
         //Storing settings in database
@@ -123,23 +153,42 @@ class WordCountAndTimePlugin {
         );
     }
 
-    function readTimeHTML() {
-        ?> 
-        <input type="checkbox" name="wcp_read_time" value="1" <?php checked(get_option('wcp_word_count'), '1'); ?> />
-        <?php
+    /** 
+    * function readTimeHTML() {
+    *  ?> 
+    *    <input type="checkbox" name="wcp_read_time" value="1" <?php checked(get_option('wcp_word_count'), '1'); ?> />
+    *    <?php
+    * }
+
+    * function charCountHTML() {
+    *    ?> 
+    *    <input type="checkbox" name="wcp_char_count" value="1" <?php checked(get_option('wcp_word_count'), '1'); ?> />
+    *    <?php
+    *}
+
+    *function wordCountHTML() {
+    *    ?> 
+    *    <input type="checkbox" name="wcp_word_count" value="1" <?php checked(get_option('wcp_word_count'), '1'); ?> />
+    *    <?php
+    *}
+    */
+
+    function sanitize_display_location($input) {
+        if($input != '0' AND $input != '1') {
+            add_settings_error('wcp_location', 'wcp_location_error', 'Display location must be either beginning or end');
+            return get_option('wcp_location', 1);
+        }
+
+        return $input;
     }
 
-    function charCountHTML() {
+// Reuseable checkbox
+    function checkboxHTML($args) {
         ?> 
-        <input type="checkbox" name="wcp_char_count" value="1" <?php checked(get_option('wcp_word_count'), '1'); ?> />
+        <input type="checkbox" name="<?php echo $args['theName'] ?>" value="1" <?php checked(get_option($args['theName']), '1'); ?> />
         <?php
     }
-
-    function wordCountHTML() {
-        ?> 
-        <input type="checkbox" name="wcp_word_count" value="1" <?php checked(get_option('wcp_word_count'), '1'); ?> />
-        <?php
-    }
+    
 
     function headlineHTML() {
         ?> 
