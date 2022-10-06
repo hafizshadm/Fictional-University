@@ -186,26 +186,6 @@ class WordCountAndTimePlugin
         );
     }
 
-    /** 
-     * function readTimeHTML() {
-     *  ?> 
-     *    <input type="checkbox" name="wcp_read_time" value="1" <?php checked(get_option('wcp_word_count'), '1'); ?> />
-     *    <?php
-     * }
-
-     * function charCountHTML() {
-     *    ?> 
-     *    <input type="checkbox" name="wcp_char_count" value="1" <?php checked(get_option('wcp_word_count'), '1'); ?> />
-     *    <?php
-     *}
-
-     *function wordCountHTML() {
-     *    ?> 
-     *    <input type="checkbox" name="wcp_word_count" value="1" <?php checked(get_option('wcp_word_count'), '1'); ?> />
-     *    <?php
-     *}
-     */
-
     function sanitize_display_location($input)
     {
         if ($input != '0' and $input != '1') {
